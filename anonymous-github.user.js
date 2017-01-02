@@ -80,6 +80,12 @@ function anonymize() {
     getElementsByClassName("timeline-comment-actions").map(elem => elem.remove());
 }
 
+// Unset `onbeforeunload`. This is a hack that forces a new page to be loaded
+// rather than github just requesting the data we need. This fixes an issue
+// where clicking on an issue from the issue tab would cause the script to
+// not run.
+window.onbeforeunload = function() {};
+
 anonymize();
 
 // Get the div where comments are appended to.
