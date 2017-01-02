@@ -6,7 +6,7 @@
 
 // ==UserScript==
 // @name        anonymous-github
-// @version     1.0.0
+// @version     1.0.1
 // @namespace   anonymous-github
 // @description Makes certain aspects of Github anonymous, with the goal of meritocracy.
 // @license     GPLv3, https://gnu.org/licenses/gpl.txt
@@ -37,7 +37,7 @@ function getElementsByClassName(className) {
 function getElementsByTagName(tagName) {
     const tags = document.getElementsByTagName(tagName);
     let elements = [];
-    for (const i = 0; i < tags.length; i++) {
+    for (let i = 0; i < tags.length; i++) {
         elements.push(tags[i]);
     }
     return elements;
