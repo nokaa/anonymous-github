@@ -6,7 +6,7 @@
 
 // ==UserScript==
 // @name        anonymous-github
-// @version     1.0.1
+// @version     1.0.2
 // @namespace   anonymous-github
 // @description Makes certain aspects of Github anonymous, with the goal of meritocracy.
 // @license     GPLv3, https://gnu.org/licenses/gpl.txt
@@ -43,36 +43,58 @@ function getElementsByTagName(tagName) {
     return elements;
 }
 
-/**
- * Replace names in comments with "Anonymous".
- */
-let names = getElementsByTagName("a").filter(function(x) {
-    return x.className.includes("author");
+
+function anonymize() {
+    /**
+     * Replace names in comments with "Anonymous".
+     */
+    let names = getElementsByTagName("a").filter(function(x) {
+        return x.className.includes("author");
+    });
+
+    names.map(elem => elem.innerHTML = "Anonymous");
+
+    /**
+     * Remove the "Contributor" badge from comments.
+     */
+    getElementsByClassName("timeline-comment-label").map(elem => elem.remove());
+
+    /**
+     * Replace all avatars with the user's avatar.
+     */
+    let avatars = getElementsByClassName("avatar");
+    // Get the url of the high quality version of the user's avatar.
+    const avatar_src = avatars[0].src.replace(/s\=[\d]+/, "s=460");
+
+    avatars.map(elem => elem.src = avatar_src);
+
+    getElementsByClassName("timeline-comment-avatar").map(elem => elem.src = avatar_src);
+
+    /**
+     * Remove reactions to comments.
+     */
+    // Remove reactions.
+    getElementsByClassName("comment-reactions").map(elem => elem.remove());
+
+    // Remove reactions menu.
+    getElementsByClassName("timeline-comment-actions").map(elem => elem.remove());
+}
+
+anonymize();
+
+// Get the div where comments are appended to.
+let target = document.getElementByClassName("js-discussion")[0];
+// Create a new observer to modify each element.
+let observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type == "childList") {
+            anonymize();
+        }
+    });
 });
 
-names.map(elem => elem.innerHTML = "Anonymous");
+let observer_config = { attributes: true,
+               childList: true,
+               characterData: true };
 
-/**
- * Remove the "Contributor" badge from comments.
- */
-getElementsByClassName("timeline-comment-label").map(elem => elem.remove());
-
-/**
- * Replace all avatars with the user's avatar.
- */
-let avatars = getElementsByClassName("avatar");
-// Get the url of the high quality version of the user's avatar.
-const avatar_src = avatars[0].src.replace(/s\=[\d]+/, "s=460");
-
-avatars.map(elem => elem.src = avatar_src);
-
-getElementsByClassName("timeline-comment-avatar").map(elem => elem.src = avatar_src);
-
-/**
- * Remove reactions to comments.
- */
-// Remove reactions.
-getElementsByClassName("comment-reactions").map(elem => elem.remove());
-
-// Remove reactions menu.
-getElementsByClassName("timeline-comment-actions").map(elem => elem.remove());
+observer.observe(target, observer_config);
