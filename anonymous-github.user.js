@@ -6,7 +6,7 @@
 
 // ==UserScript==
 // @name        anonymous-github
-// @version     1.0.2
+// @version     1.0.3
 // @namespace   anonymous-github
 // @description Makes certain aspects of Github anonymous, with the goal of meritocracy.
 // @license     GPLv3, https://gnu.org/licenses/gpl.txt
@@ -83,7 +83,7 @@ function anonymize() {
 anonymize();
 
 // Get the div where comments are appended to.
-let target = document.getElementByClassName("js-discussion")[0];
+let target = document.getElementsByClassName("js-discussion")[0];
 // Create a new observer to modify each element.
 let observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
