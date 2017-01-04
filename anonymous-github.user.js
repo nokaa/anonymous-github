@@ -48,11 +48,10 @@ function anonymize() {
     /**
      * Replace names in comments with "Anonymous".
      */
-    let names = getElementsByTagName("a").filter(function(x) {
+    getElementsByTagName("a").filter(function(x) {
         return x.className.includes("author");
-    });
-
-    names.map(elem => elem.innerHTML = "Anonymous");
+    })
+    .map(elem => elem.innerHTML = "Anonymous");
 
     /**
      * Remove the "Contributor" badge from comments.
